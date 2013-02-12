@@ -127,37 +127,49 @@ static NSComparisonResult (^g_glyph_page_code_comparator)(SGlyphInfo *, SGlyphIn
   for (SGlyphInfo *info in sorted_glyphs) {
     // This is basically the closest I'll get to making this any faster
     UniChar first_char = info.character;
-    dispatch_group_async(work_group, _workQueue, ^{
-      for (SGlyphInfo *next_info in sorted_glyphs) {
-        UniChar chars[2] = {first_char, next_info.character};
-        @autoreleasepool {
-          // And this is just plain evil, probably.
-          NSString *gen_string = [[NSString alloc] initWithCharactersNoCopy:chars
-                                  length:2 freeWhenDone:NO];
-          NSTextStorage *storage = [[NSTextStorage alloc]
-                                    initWithString:gen_string attributes:attrs];
-          NSLayoutManager *layman = [[NSLayoutManager alloc] init];
-          NSTextContainer *container = [[NSTextContainer alloc]
-                                        initWithContainerSize:container_size];
+    dispatch_group_async(work_group, _workQueue, ^{ @autoreleasepool {
+      const NSRange char_range = {0, 2};
+      UniChar chars[2] = {first_char, 'a'};
+      NSTextStorage *storage;
+      NSLayoutManager *layman;
+      NSTextContainer *container;
 
-          [layman addTextContainer:container];
-          [storage addLayoutManager:layman];
-          NSRange glyph_range = [layman glyphRangeForTextContainer:container];
-          NSPoint loc_first = [layman locationForGlyphAtIndex:glyph_range.location];
-          NSPoint loc_second = [layman locationForGlyphAtIndex:glyph_range.location + 1];
-          float kern = (float)((loc_second.x - info.advance.width) - loc_first.x);
-          if (std::fabs(kern) > 1e-4) {
-            @synchronized(kerns) {
-              [kerns addObject:@{
-                @"first": @((NSUInteger)chars[0]),
-                @"second": @((NSUInteger)chars[1]),
-                @"amount": @(kern),
-              }];
-            }
+      // And this is just plain evil, probably.
+      layman = [[NSLayoutManager alloc] init];
+      container = [[NSTextContainer alloc] initWithContainerSize:container_size];
+      storage = [[NSTextStorage alloc] initWithString:@"xy" attributes:attrs];
+
+      [layman addTextContainer:container];
+      [storage addLayoutManager:layman];
+
+      for (SGlyphInfo *next_info in sorted_glyphs) {
+        NSRange glyph_range;
+        NSPoint loc_first;
+        NSPoint loc_second;
+        float kern;
+        NSString *gen_string;
+
+        chars[1] = next_info.character;
+        gen_string = [[NSString alloc] initWithCharactersNoCopy:chars length:2 freeWhenDone:NO];
+        [storage replaceCharactersInRange:char_range withString:gen_string];
+
+        glyph_range = [layman glyphRangeForTextContainer:container];
+        loc_first = [layman locationForGlyphAtIndex:glyph_range.location];
+        loc_second = [layman locationForGlyphAtIndex:glyph_range.location + 1];
+
+        kern = (float)((loc_second.x - info.advance.width) - loc_first.x);
+
+        if (std::fabs(kern) > 1e-4) {
+          @synchronized(kerns) {
+            [kerns addObject:@{
+              @"first": @((NSUInteger)chars[0]),
+              @"second": @((NSUInteger)chars[1]),
+              @"amount": @(kern),
+            }];
           }
         }
       }
-    });
+    }});
   }
   dispatch_group_wait(work_group, DISPATCH_TIME_FOREVER);
   [kerns sortUsingDescriptors:@[
