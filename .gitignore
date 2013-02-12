@@ -1,0 +1,4 @@
+sbfgen
+*.o
+*.json
+*.png
