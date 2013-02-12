@@ -126,9 +126,10 @@ static NSComparisonResult (^g_glyph_page_code_comparator)(SGlyphInfo *, SGlyphIn
   dispatch_group_t work_group = dispatch_group_create();
   for (SGlyphInfo *info in sorted_glyphs) {
     // This is basically the closest I'll get to making this any faster
+    UniChar first_char = info.character;
     dispatch_group_async(work_group, _workQueue, ^{
       for (SGlyphInfo *next_info in sorted_glyphs) {
-        UniChar chars[2] = {info.character, next_info.character};
+        UniChar chars[2] = {first_char, next_info.character};
         @autoreleasepool {
           // And this is just plain evil, probably.
           NSString *gen_string = [[NSString alloc] initWithCharactersNoCopy:chars
