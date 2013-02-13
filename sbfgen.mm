@@ -269,7 +269,7 @@ int main(int argc, const char *argv[])
   @autoreleasepool {
     NSMutableArray *fonts = [NSMutableArray array];
     argcheck_state_t state = GET_OPTION;
-    snow::dimensi_t pageSize = {512, 512};
+    snow::dimensi_t pageSize = {256, 256};
     CGFloat fontSize = g_default_font_size;
     NSUInteger padding = 4;
     NSString *prefix = nil;
