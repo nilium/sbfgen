@@ -17,8 +17,8 @@ You should have received a copy of the GNU General Public License
 along with sbfgen.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef __SBFGEN_NSARRAY_FILTERS_HH__
-#define __SBFGEN_NSARRAY_FILTERS_HH__
+#ifndef __SNOW_NSFILTERS_HH__
+#define __SNOW_NSFILTERS_HH__
 
 #import <Foundation/Foundation.h>
 
@@ -92,5 +92,5 @@ typedef id (^SPReduceBlock)(id memo, id obj);
 
 @end
 
-#endif /* end __SBFGEN_NSARRAY_FILTERS_HH__ include guard */
+#endif /* end __SNOW_NSFILTERS_HH__ include guard */
 

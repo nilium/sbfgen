@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with sbfgen.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#import "NSArray+Filters.hh"
+#import "NSFilters.hh"
 
 typedef __unsafe_unretained id unsafe_id;
 typedef void (^s_complete_block_t)(const unsafe_id* objects, size_t num_objects);
