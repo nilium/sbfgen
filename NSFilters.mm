@@ -166,7 +166,7 @@ static void SPFilterSetUsingBlock(NSSet *set, SPFilterBlock block, BOOL checkFor
 
   if (set_len == 0) {
     if (completion != nil)
-      completion(nullptr, 0);
+      completion(NULL, 0);
 
     return;
   }
@@ -226,7 +226,7 @@ static void SPMapArrayUsingBlock(NSArray *array, SPMapBlock block, dispatch_queu
 
   if (array_len == 0) {
     if (completion != nil)
-      completion(nullptr, 0);
+      completion(NULL, 0);
 
     return;
   }
@@ -296,7 +296,7 @@ static void SPMapSetUsingBlock(NSSet *set, SPMapBlock block, dispatch_queue_t qu
 
   if (num_objects == 0) {
     if (completion)
-      completion(nullptr, 0);
+      completion(NULL, 0);
 
     return;
   }
