@@ -26,14 +26,17 @@ typedef id (^SPMapBlock)(id obj);
 typedef BOOL (^SPFilterBlock)(id obj);
 typedef id (^SPReduceBlock)(id memo, id obj);
 
-@interface NSArray (SPImmutableFilters)
+@interface NSArray (SPImmutableArrayFilters)
 
 // map
 - (NSArray *)mappedArrayUsingBlock:(SPMapBlock)block;
+- (NSArray *)mappedArrayUsingBlock:(SPMapBlock)block queue:(dispatch_queue_t)queue;
 // reject
 - (NSArray *)rejectedArrayUsingBlock:(SPFilterBlock)block;
+- (NSArray *)rejectedArrayUsingBlock:(SPFilterBlock)block queue:(dispatch_queue_t)queue;
 // select
 - (NSArray *)selectedArrayUsingBlock:(SPFilterBlock)block;
+- (NSArray *)selectedArrayUsingBlock:(SPFilterBlock)block queue:(dispatch_queue_t)queue;
 
 // reduce
 - (id)reduceWithInitialValue:(id)memo usingBlock:(SPReduceBlock)block;
@@ -42,14 +45,50 @@ typedef id (^SPReduceBlock)(id memo, id obj);
 
 @end
 
-@interface NSMutableArray (SPMutableFilters)
+@interface NSMutableArray (SPMutableArrayFilters)
 
 // map
 - (void)mapUsingBlock:(SPMapBlock)block;
+- (void)mapUsingBlock:(SPMapBlock)block queue:(dispatch_queue_t)queue;
 // reject
 - (void)rejectUsingBlock:(SPFilterBlock)block;
+- (void)rejectUsingBlock:(SPFilterBlock)block queue:(dispatch_queue_t)queue;
 // select
 - (void)selectUsingBlock:(SPFilterBlock)block;
+- (void)selectUsingBlock:(SPFilterBlock)block queue:(dispatch_queue_t)queue;
+
+@end
+
+@interface NSSet (SPImmutableSetFilters)
+
+// map
+- (NSSet *)mappedSetUsingBlock:(SPMapBlock)block;
+- (NSSet *)mappedSetUsingBlock:(SPMapBlock)block queue:(dispatch_queue_t)queue;
+// reject
+- (NSSet *)rejectedSetUsingBlock:(SPFilterBlock)block;
+- (NSSet *)rejectedSetUsingBlock:(SPFilterBlock)block queue:(dispatch_queue_t)queue;
+// select
+- (NSSet *)selectedSetUsingBlock:(SPFilterBlock)block;
+- (NSSet *)selectedSetUsingBlock:(SPFilterBlock)block queue:(dispatch_queue_t)queue;
+
+// reduce
+- (id)reduceWithInitialValue:(id)memo usingBlock:(SPReduceBlock)block;
+// reduce (memo is first value)
+- (id)reduceUsingBlock:(SPReduceBlock)block;
+
+@end
+
+@interface NSMutableSet (SPMutableSetFilters)
+
+// map
+- (void)mapUsingBlock:(SPMapBlock)block;
+- (void)mapUsingBlock:(SPMapBlock)block queue:(dispatch_queue_t)queue;
+// reject
+- (void)rejectUsingBlock:(SPFilterBlock)block;
+- (void)rejectUsingBlock:(SPFilterBlock)block queue:(dispatch_queue_t)queue;
+// select
+- (void)selectUsingBlock:(SPFilterBlock)block;
+- (void)selectUsingBlock:(SPFilterBlock)block queue:(dispatch_queue_t)queue;
 
 @end
 
