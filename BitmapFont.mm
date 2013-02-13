@@ -245,7 +245,7 @@ static NSComparisonResult (^g_glyph_page_code_comparator)(SGlyphInfo *, SGlyphIn
       @"x_max": @((float)bbox.size.width),
       @"y_max": @((float)bbox.size.height)
     },
-    @"glyphs": [sorted_glyphs mappedArrayUsingBlock:^(SGlyphInfo *glyph) { return [glyph infoDictionary]; }]
+    @"glyphs": [sorted_glyphs mappedArrayUsingBlock:^(SGlyphInfo *glyph) { return [glyph infoDictionary]; } queue:_workQueue]
   }];
 
   NSArray *kernings = [self getKernings];
@@ -262,10 +262,11 @@ static NSComparisonResult (^g_glyph_page_code_comparator)(SGlyphInfo *, SGlyphIn
 
 - (void)addGlyphsForCharactersInRange:(NSRange)chars
 {
+  NSSet *char_set = [_glyphs mappedSetUsingBlock:^(SGlyphInfo *info) { return @(info.character); } queue:_workQueue];
   NSRangeInclEach(chars, ^(NSUInteger char_loc, BOOL *stop) {
-    if ([_glyphs objectsPassingTest:^(SGlyphInfo *curinfo, BOOL *stop) {
-      return (*stop = (curinfo.character == char_loc));
-    }]);
+    // Basically, if the character is already in the font, skip it
+    if ([char_set containsObject:@((UniChar)char_loc)])
+      return;
 
     SGlyphInfo *info = [[SGlyphInfo alloc] initWithFont:_font character:(UniChar)char_loc];
     if (info) {
