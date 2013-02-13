@@ -40,7 +40,7 @@ typedef id (^SPReduceBlock)(id memo, id obj);
 
 // reduce
 - (id)reduceWithInitialValue:(id)memo usingBlock:(SPReduceBlock)block;
-// reduce (memo is first value)
+// reduce (memo is nil)
 - (id)reduceUsingBlock:(SPReduceBlock)block;
 
 @end
@@ -73,7 +73,7 @@ typedef id (^SPReduceBlock)(id memo, id obj);
 
 // reduce
 - (id)reduceWithInitialValue:(id)memo usingBlock:(SPReduceBlock)block;
-// reduce (memo is first value)
+// reduce (memo is nil)
 - (id)reduceUsingBlock:(SPReduceBlock)block;
 
 @end
