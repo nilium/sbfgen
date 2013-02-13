@@ -32,7 +32,7 @@ SOURCES:=\
   BitmapFont.mm \
   FontPage.mm \
   GlyphInfo.mm \
-  NSArray+Filters.mm \
+  NSFilters.mm \
   NSRange+foreach.mm \
   sbfgen.mm
 
@@ -40,7 +40,7 @@ OBJECTS:=\
   BitmapFont.o \
   FontPage.o \
   GlyphInfo.o \
-  NSArray+Filters.o \
+  NSFilters.o \
   NSRange+foreach.o \
   sbfgen.o
 
@@ -51,7 +51,7 @@ all: $(PRODUCT)
 $(PRODUCT): $(OBJECTS)
 	$(CXX) $(LDFLAGS) $^ -o $@
 
-BitmapFont.o: BitmapFont.mm BitmapFont.hh GlyphInfo.hh FontPage.hh NSArray+Filters.hh NSRange+foreach.hh
+BitmapFont.o: BitmapFont.mm BitmapFont.hh GlyphInfo.hh FontPage.hh NSFilters.hh NSRange+foreach.hh
 	$(CXX) $(CFLAGS) $(CXXFLAGS) -c $< -o $@
 
 FontPage.o: FontPage.mm FontPage.hh GlyphInfo.hh BitmapFont.hh
@@ -60,7 +60,7 @@ FontPage.o: FontPage.mm FontPage.hh GlyphInfo.hh BitmapFont.hh
 GlyphInfo.o: GlyphInfo.mm GlyphInfo.hh
 	$(CXX) $(CFLAGS) $(CXXFLAGS) -c $< -o $@
 
-NSArray+Filters.o: NSArray+Filters.mm NSArray+Filters.hh
+NSFilters.o: NSFilters.mm NSFilters.hh
 	$(CXX) $(CFLAGS) $(CXXFLAGS) -c $< -o $@
 
 NSRange+foreach.o: NSRange+foreach.mm NSRange+foreach.hh

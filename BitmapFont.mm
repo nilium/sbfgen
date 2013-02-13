@@ -21,7 +21,7 @@ along with sbfgen.  If not, see <http://www.gnu.org/licenses/>.
 #import "GlyphInfo.hh"
 #import "FontPage.hh"
 #import "NSRange+foreach.hh"
-#import "NSArray+Filters.hh"
+#import "NSFilters.hh"
 #import <cmath>
 
 using namespace snow;
