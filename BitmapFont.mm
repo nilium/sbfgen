@@ -265,7 +265,7 @@ static NSComparisonResult (^g_glyph_page_code_comparator)(SGlyphInfo *, SGlyphIn
   NSSet *char_set = [_glyphs mappedSetUsingBlock:^(SGlyphInfo *info) { return @(info.character); } queue:_workQueue];
   NSRangeInclEach(chars, ^(NSUInteger char_loc, BOOL *stop) {
     // Basically, if the character is already in the font, skip it
-    if ([char_set containsObject:@((UniChar)char_loc)])
+    if ([char_set member:@((UniChar)char_loc)])
       return;
 
     SGlyphInfo *info = [[SGlyphInfo alloc] initWithFont:_font character:(UniChar)char_loc];
