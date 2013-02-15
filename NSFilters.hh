@@ -20,6 +20,14 @@ along with sbfgen.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef __SNOW_NSFILTERS_HH__
 #define __SNOW_NSFILTERS_HH__
 
+#import <Foundation/Foundation.h>
+
+typedef id (^SPMapBlock)(id obj);
+typedef BOOL (^SPFilterBlock)(id obj);
+typedef id (^SPReduceBlock)(id memo, id obj);
+
+extern const NSUInteger NSFiltersDefaultStride;
+
 /*
 All map/select/reject operations can be performed asynchronously (provided your
 block is fine under those conditions). They will block execution of the calling
@@ -117,4 +125,3 @@ if you exclude the stride, they will use the NSFiltersDefaultStride of 256.
 @end
 
 #endif /* end __SNOW_NSFILTERS_HH__ include guard */
-
