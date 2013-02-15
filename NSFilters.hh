@@ -20,25 +20,19 @@ along with sbfgen.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef __SNOW_NSFILTERS_HH__
 #define __SNOW_NSFILTERS_HH__
 
-#import <Foundation/Foundation.h>
-
-typedef id (^SPMapBlock)(id obj);
-typedef BOOL (^SPFilterBlock)(id obj);
-typedef id (^SPReduceBlock)(id memo, id obj);
-
-extern const NSUInteger NSFiltersDefaultStride;
-
 /*
 All map/select/reject operations can be performed asynchronously (provided your
 block is fine under those conditions). They will block execution of the calling
 thread until complete - if you want to run them without blocking, use
-dispatch_async to call them.
+dispatch_async to call them, though bear in mind that for mutable containers,
+you should not modify them while the operation is running (this sounds obvious,
+but obvious things often have to be said).
 
-map blocks must return non-nil objects.
+map blocks must return non-nil objects (because you can't store nil in any
+Cocoa containers - if you must, use NSNull).
 
-Async array map/reject/select will allow you to use an arbitrary stride. This
-currently doesn't apply to the NSSet categories. By default, if you exclude the
-stride, it will use the NSFiltersDefaultStride of 256.
+Async map/reject/select will allow you to use an arbitrary stride. By default,
+if you exclude the stride, they will use the NSFiltersDefaultStride of 256.
 */
 
 @interface NSArray (SPImmutableArrayFilters)
