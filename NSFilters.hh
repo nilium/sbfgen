@@ -85,17 +85,23 @@ stride, it will use the NSFiltersDefaultStride of 256.
 // map
 - (NSSet *)mappedSetUsingBlock:(SPMapBlock)block;
 - (NSSet *)mappedSetUsingBlock:(SPMapBlock)block queue:(dispatch_queue_t)queue;
+- (NSSet *)mappedSetUsingBlock:(SPMapBlock)block queue:(dispatch_queue_t)queue stride:(NSUInteger)stride;
 // reject
 - (NSSet *)rejectedSetUsingBlock:(SPFilterBlock)block;
 - (NSSet *)rejectedSetUsingBlock:(SPFilterBlock)block queue:(dispatch_queue_t)queue;
+- (NSSet *)rejectedSetUsingBlock:(SPFilterBlock)block queue:(dispatch_queue_t)queue stride:(NSUInteger)stride;
 // select
 - (NSSet *)selectedSetUsingBlock:(SPFilterBlock)block;
 - (NSSet *)selectedSetUsingBlock:(SPFilterBlock)block queue:(dispatch_queue_t)queue;
+- (NSSet *)selectedSetUsingBlock:(SPFilterBlock)block queue:(dispatch_queue_t)queue stride:(NSUInteger)stride;
 
 // reduce
 - (id)reduceWithInitialValue:(id)memo usingBlock:(SPReduceBlock)block;
 // reduce (memo is nil)
 - (id)reduceUsingBlock:(SPReduceBlock)block;
+
+// auxiliary getObjects:count: to place set objects in an unretained array
+- (void)getUnsafeObjects:(__unsafe_unretained id *)objects count:(NSUInteger)count;
 
 @end
 
@@ -104,12 +110,15 @@ stride, it will use the NSFiltersDefaultStride of 256.
 // map
 - (void)mapUsingBlock:(SPMapBlock)block;
 - (void)mapUsingBlock:(SPMapBlock)block queue:(dispatch_queue_t)queue;
+- (void)mapUsingBlock:(SPMapBlock)block queue:(dispatch_queue_t)queue stride:(NSUInteger)stride;
 // reject
 - (void)rejectUsingBlock:(SPFilterBlock)block;
 - (void)rejectUsingBlock:(SPFilterBlock)block queue:(dispatch_queue_t)queue;
+- (void)rejectUsingBlock:(SPFilterBlock)block queue:(dispatch_queue_t)queue stride:(NSUInteger)stride;
 // select
 - (void)selectUsingBlock:(SPFilterBlock)block;
 - (void)selectUsingBlock:(SPFilterBlock)block queue:(dispatch_queue_t)queue;
+- (void)selectUsingBlock:(SPFilterBlock)block queue:(dispatch_queue_t)queue stride:(NSUInteger)stride;
 
 @end
 
