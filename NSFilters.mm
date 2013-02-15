@@ -372,7 +372,7 @@ sp_set_map_cleanup:
 }
 
 
-@implementation NSArray (SPImmutableFilters)
+@implementation NSArray (SPImmutableArrayFilters)
 
 - (NSArray *)mappedArrayUsingBlock:(SPMapBlock)block
 {
@@ -446,7 +446,7 @@ sp_set_map_cleanup:
 
 @end
 
-@implementation NSMutableArray (SPMutableFilters)
+@implementation NSMutableArray (SPMutableArrayFilters)
 
 - (void)mapUsingBlock:(SPMapBlock)block
 {
