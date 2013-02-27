@@ -306,7 +306,7 @@ static void SPMapArrayUsingBlock(NSArray *array, SPMapBlock block, NSUInteger st
     }
   }
 
-  if (completion != nil && exception != nil)
+  if (completion != nil && exception == nil)
     completion(objects, array_len);
 
 sp_array_map_cleanup:
@@ -381,7 +381,7 @@ static void SPMapSetUsingBlock(NSSet *set, SPMapBlock block, NSUInteger stride, 
     }
   }
 
-  if (completion != nil && exception != nil)
+  if (completion != nil && exception == nil)
     completion(objects, num_objects);
 
 sp_set_map_cleanup:
