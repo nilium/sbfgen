@@ -25,14 +25,14 @@ along with sbfgen.  If not, see <http://www.gnu.org/licenses/>.
 using namespace snow;
 
 // The minimum glyph size in pixels.
-#define MIN_GLYPH_SIZE (5)
+#define MIN_GLYPH_SIZE (8)
 
 // Uncomment to use the nearest multiple of five when fitting glyphs into the
 // texture packer. If commented, it uses the nearest power of two. In most cases
 // it's better to use a multiple of five, though if the font fits well into a
 // POT size then you may want to use the latter, as it will produce more uniform
 // and usually better-packed glyphs.
-#define USE_NEAREST_FIVE
+// #define USE_NEAREST_FIVE
 
 // Uncomment to use square bins - that is, each glyph gets assigned a bin where
 // its width and height are equal. Otherwise, width and height may differ
