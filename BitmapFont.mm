@@ -41,9 +41,17 @@ static NSComparisonResult (^g_glyph_size_comparator)(NSBezierPath *, NSBezierPat
   #ifdef SORT_BY_LONGEST_EDGE
     max_left = std::max(left_size.width, left_size.height);
     max_right = std::max(right_size.width, right_size.height);
+    if (max_left == max_right) {
+      max_left = std::min(left_size.width, left_size.height);
+      max_right = std::min(right_size.width, right_size.height);
+    }
   #else
-    max_left = left_size.height;
-    max_right = right_size.height;
+    max_left = left_size.width;
+    max_right = right_size.width;
+    if (max_left == max_right) {
+      max_left = left_size.height;
+      max_right = right_size.height;
+    }
   #endif
     if (max_left > max_right)
       return NSOrderedDescending;
