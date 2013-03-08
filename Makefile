@@ -21,12 +21,13 @@ CFLAGS+= -Wall
 CFLAGS+= -g -O0
 CFLAGS+= -fobjc-arc -fblocks
 CFLAGS+= -DTARGET_OS_MAC
+CFLAGS+= $(shell pkg-config --cflags snow-common)
 
 CXXFLAGS+= -ObjC++ -std=c++11 -stdlib=libc++
 
 LDFLAGS+= -framework Cocoa
 LDFLAGS+= -lc++
-LDFLAGS+= -lsnow-common
+LDFLAGS+= $(shell pkg-config --libs snow-common)
 
 SOURCES:=\
   BitmapFont.mm \
