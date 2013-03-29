@@ -3,6 +3,7 @@ require 'sqlite3'
 require 'json'
 
 STMT_CREATE_INFO_TABLE = "CREATE TABLE IF NOT EXISTS font_info(
+  font_id INTEGER PRIMARY KEY,
   pages INTEGER,
   num_glyphs INTEGER,
   num_kernings INTEGER,
@@ -14,8 +15,7 @@ STMT_CREATE_INFO_TABLE = "CREATE TABLE IF NOT EXISTS font_info(
   bbox_max_x REAL,
   bbox_min_y REAL,
   bbox_max_y REAL,
-  name TEXT,
-  font_id INTEGER PRIMARY KEY
+  name TEXT
 )"
 STMT_CREATE_GLYPH_TABLE = "CREATE TABLE IF NOT EXISTS font_glyphs(
   font_id INTEGER,
