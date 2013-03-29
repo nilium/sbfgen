@@ -6,7 +6,7 @@ STMT_CREATE_INFO_TABLE = "CREATE TABLE IF NOT EXISTS font_info(
   pages INTEGER,
   num_glyphs INTEGER,
   num_kernings INTEGER,
-  line_height FLOAT,
+  line_height REAL,
   leading REAL,
   ascent REAL,
   descent REAL,
