@@ -110,7 +110,7 @@ KFIRST       = "first"
 KSECOND      = "second"
 KAMOUNT      = "amount"
 
-def convert_to_db(json_filepath)
+def convert_to_db(json_filepath, db = nil)
 
   json_input = nil
   File.open(json_filepath, 'r') {
@@ -125,10 +125,14 @@ def convert_to_db(json_filepath)
   # compensate for the name key not being inserted by sbfgen (ergo being a key
   # inserted by someone using the font)
   name = json_input[KNAME] || File.basename(json_filepath, File.extname(json_filepath))
-  dbname = "#{json_filepath.chomp(File.extname(json_filepath))}.db"
-  puts "Converting #{json_filepath} -> #{dbname}"
 
-  db = SQLite3::Database.new(dbname)
+  close_db = false
+
+  if db.nil?
+    dbname = "#{json_filepath.chomp(File.extname(json_filepath))}.db"
+    db = SQLite3::Database.new(dbname)
+    close_db = true
+  end
 
   db.execute(STMT_CREATE_INFO_TABLE)
   db.execute(STMT_CREATE_GLYPH_TABLE)
@@ -152,49 +156,59 @@ def convert_to_db(json_filepath)
 
   font_id = db.last_insert_row_id()
 
-  new_glyph_stmt = db.prepare(STMT_INSERT_GLYPH)
-  new_kern_stmt = db.prepare(STMT_INSERT_KERN)
+  unless glyphs.empty?
+    new_glyph_stmt = db.prepare(STMT_INSERT_GLYPH)
+    new_glyph_stmt.bind_param("font_id", font_id)
+    r = nil
+    glyphs.each {
+      |glyph|
 
-  new_glyph_stmt.bind_param("font_id", font_id)
-  new_kern_stmt.bind_param("font_id", font_id)
+      r = new_glyph_stmt.execute(
+        "code"         => glyph[KCODE],
+        "page"         => glyph[KPAGE],
+        "frame_x"      => glyph[KFRAME][KX],
+        "frame_y"      => glyph[KFRAME][KY],
+        "frame_width"  => glyph[KFRAME][KWIDTH],
+        "frame_height" => glyph[KFRAME][KHEIGHT],
+        "advance_x"    => glyph[KADVANCES][KX],
+        "advance_y"    => glyph[KADVANCES][KY],
+        "offset_x"     => glyph[KOFFSETS][KX],
+        "offset_y"     => glyph[KOFFSETS][KY]
+        )
+    }
+    r.close() unless r.nil?
+  end
 
-  r = nil
-  glyphs.each {
-    |glyph|
+  unless kerns.empty?
+    new_kern_stmt = db.prepare(STMT_INSERT_KERN)
+    new_kern_stmt.bind_param("font_id", font_id)
+    r = nil
+    kerns.each {
+      |kern|
+      r = new_kern_stmt.execute(
+        "first_code"  => kern[KFIRST],
+        "second_code" => kern[KSECOND],
+        "amount"      => kern[KAMOUNT]
+        )
+    }
+    r.close() unless r.nil?
+  end
 
-    r = new_glyph_stmt.execute(
-      "code"         => glyph[KCODE],
-      "page"         => glyph[KPAGE],
-      "frame_x"      => glyph[KFRAME][KX],
-      "frame_y"      => glyph[KFRAME][KY],
-      "frame_width"  => glyph[KFRAME][KWIDTH],
-      "frame_height" => glyph[KFRAME][KHEIGHT],
-      "advance_x"    => glyph[KADVANCES][KX],
-      "advance_y"    => glyph[KADVANCES][KY],
-      "offset_x"     => glyph[KOFFSETS][KX],
-      "offset_y"     => glyph[KOFFSETS][KY]
-      )
-  }
-  r.close
-
-  kerns.each {
-    |kern|
-    r = new_kern_stmt.execute(
-      "first_code"  => kern[KFIRST],
-      "second_code" => kern[KSECOND],
-      "amount"      => kern[KAMOUNT]
-      )
-  }
-  r.close()
-
-  db.close()
+  db.close() if close_db
 
 end
 
 if __FILE__ == $0
+  dbname = ARGV.shift
+  db = SQLite3::Database.new(dbname)
+  if db.nil?
+    raise "Couldn't open database #{dbname}"
+  end
+
   ARGV.each {
     |filepath|
-    fork { convert_to_db(filepath) }
+    puts "Converting #{filepath} -> #{dbname}"
+    convert_to_db(filepath, db)
   }
-  Process.waitall
+  db.close unless db.nil?
 end
