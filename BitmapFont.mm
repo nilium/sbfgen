@@ -247,6 +247,10 @@ static NSComparisonResult (^g_glyph_page_code_comparator)(SGlyphInfo *, SGlyphIn
     @"leading": @((float)CTFontGetLeading((__bridge CTFontRef)_font)),
     @"ascent": @((float)CTFontGetAscent((__bridge CTFontRef)_font)),
     @"descent": @((float)CTFontGetDescent((__bridge CTFontRef)_font)),
+    @"page_size": @{
+      @"width": @(_pageSize.width),
+      @"height": @(_pageSize.height)
+    },
     @"bbox": @{
       // Basically, we're dropping precision here to avoid a lot of numbers that end in 00001
       @"x_min": @((float)bbox.origin.x),

@@ -11,6 +11,8 @@ STMT_CREATE_INFO_TABLE = "CREATE TABLE IF NOT EXISTS font_info(
   leading REAL,
   ascent REAL,
   descent REAL,
+  page_width INTEGER,
+  page_height INTEGER,
   bbox_min_x REAL,
   bbox_max_x REAL,
   bbox_min_y REAL,
@@ -45,6 +47,8 @@ STMT_INSERT_INFO = "INSERT INTO font_info(
   leading,
   ascent,
   descent,
+  page_width,
+  page_height,
   bbox_min_x,
   bbox_max_x,
   bbox_min_y,
@@ -58,6 +62,8 @@ STMT_INSERT_INFO = "INSERT INTO font_info(
   :leading ,
   :ascent ,
   :descent ,
+  :page_width ,
+  :page_height ,
   :bbox_min_x ,
   :bbox_max_x ,
   :bbox_min_y ,
@@ -92,6 +98,7 @@ KLINE_HEIGHT = "line_height"
 KLEADING     = "leading"
 KASCENT      = "ascent"
 KDESCENT     = "descent"
+KPAGE_SIZE   = "page_size"
 KBBOX        = "bbox"
 KX_MIN       = "x_min"
 KY_MIN       = "y_min"
@@ -148,6 +155,8 @@ def convert_to_db(json_filepath, db = nil)
     "leading"      => json_input[KLEADING],
     "ascent"       => json_input[KASCENT],
     "descent"      => json_input[KDESCENT],
+    "page_width"   => json_input[KPAGE_SIZE][KWIDTH],
+    "page_height"  => json_input[KPAGE_SIZE][KHEIGHT],
     "bbox_min_x"   => json_input[KBBOX][KX_MIN],
     "bbox_max_x"   => json_input[KBBOX][KX_MAX],
     "bbox_min_y"   => json_input[KBBOX][KY_MIN],
