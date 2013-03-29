@@ -27,7 +27,7 @@ along with sbfgen.  If not, see <http://www.gnu.org/licenses/>.
 using namespace snow;
 
 // Uncomment to sort by longest edge, otherwise sorts by glyph height (this
-// tends to be more optimal then sorting by longest edge).
+// tends to be more optimal than sorting by longest edge).
 // #define SORT_BY_LONGEST_EDGE
 
 
