@@ -24,6 +24,9 @@ along with sbfgen.  If not, see <http://www.gnu.org/licenses/>.
 
 using namespace snow;
 
+// The size of a cell in the font page's bins
+#define CELL_SIZE (4)
+
 // The minimum glyph size in pixels.
 #define MIN_GLYPH_SIZE (8)
 
@@ -39,33 +42,28 @@ using namespace snow;
 // according to nearestFunc (which defaults to the nearest multiple of five).
 // #define USE_SQUARE_BINS
 
-// Uncomment to enable drawing of colored rectangles around bins (both used and
-// unused). This is only really useful for debugging and should otherwise be
-// left alone.
-// #define DEBUG_DRAW_BINS
 
-
-
-#ifdef DEBUG_DRAW_BINS
-static void drawBins(const binpack_t *bin) {
-  [(bin->loaded() ? [NSColor blueColor] : [NSColor orangeColor]) setStroke];
-  auto frame = bin->frame();
-  NSRect stroke_rect = {
-    { (CGFloat)frame.origin.x, (CGFloat)frame.origin.y },
-    { (CGFloat)frame.size.width, (CGFloat)frame.size.height }
+inline static snow::vec2_t<size_t> cells_for_size(const snow::dimensi_t &dims) {
+  return {
+    (size_t)dims.width / CELL_SIZE + 1,
+    (size_t)dims.height / CELL_SIZE + 1,
   };
-  [NSBezierPath strokeRect:stroke_rect];
-  if (bin->bottom())
-    drawBins(bin->bottom());
-  if (bin->right())
-    drawBins(bin->right());
 }
-#endif
 
-#ifdef USE_NEAREST_FIVE
+inline static snow::vec2f_t cells_to_pos(const snow::vec2_t<size_t> &cells) {
+  return {
+    (float)cells.x * CELL_SIZE,
+    (float)cells.y * CELL_SIZE
+  };
+}
+
+#define USE_NEAREST_SCALAR 1
+#ifdef USE_NEAREST_SCALAR
 
 static int nearestFunc(int x) {
-  return (x / 5) * 5;
+  int nearest = 0;
+  while (nearest < x) nearest += USE_NEAREST_SCALAR;
+  return nearest;
 }
 
 #else
@@ -94,7 +92,7 @@ static int nearestFunc(int x) {
     _owner = owner;
     _glyph_paths = [NSMutableDictionary new];
     _glyphs = [NSMutableArray new];
-    _bins = new binpack_t(size);
+    _bins.resize({(size_t)size.width / CELL_SIZE, (size_t)size.height / CELL_SIZE});
     _storage = calloc(4 * size.width, size.height);
 
     color_space = CGColorSpaceCreateWithName(kCGColorSpaceGenericRGB);
@@ -127,12 +125,13 @@ static int nearestFunc(int x) {
 #endif
   };
 
-  binpack_t *bin = _bins->find_unused_bin(glyph_size);
-  // if (bin)
-    // std::clog << bin->frame() << std::endl;
-  if (bin) {
+  auto cell_size = cells_for_size(glyph_size);
+  auto pair = _bins.find_free_pos(cell_size);
+
+  if (pair.first) {
+    _bins.consume_subimage(pair.second, cell_size, info.character);
     NSRect glyph_rect;
-    auto origin = bin->origin();
+    auto origin = cells_to_pos(pair.second);
 
     path = [path copy];
     glyph_rect = NSMakeRect(origin.x + _padding, origin.y + _padding,
@@ -170,7 +169,6 @@ static int nearestFunc(int x) {
 
 - (void)dealloc
 {
-  delete _bins;
   CGContextRelease(_context);
   free(_storage);
 }

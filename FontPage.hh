@@ -21,7 +21,9 @@ along with sbfgen.  If not, see <http://www.gnu.org/licenses/>.
 #define __SBFGEN_FONTPAGE_HH__
 
 #import <Cocoa/Cocoa.h>
-#import <snow/types/binpack.hh>
+#import <snow/types/types_2d.hh>
+#import <snow/math/vec2.hh>
+#import <snow/types/slot_image.hh>
 
 #define kSFontPageBitmapInfoFlags (kCGBitmapByteOrder32Host | kCGImageAlphaPremultipliedFirst)
 
@@ -33,7 +35,7 @@ along with sbfgen.  If not, see <http://www.gnu.org/licenses/>.
   __weak SBitmapFont *_owner;
   NSMutableArray *_glyphs;
   NSMutableDictionary *_glyph_paths;
-  snow::binpack_t *_bins;
+  snow::slot_image_t<> _bins;
   NSUInteger _padding;
   CGContextRef _context;
   void *_storage;
