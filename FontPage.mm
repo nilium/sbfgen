@@ -28,7 +28,7 @@ using namespace snow;
 #define CELL_SIZE (4)
 
 // The minimum glyph size in pixels.
-#define MIN_GLYPH_SIZE (8)
+#define MIN_GLYPH_SIZE CELL_SIZE
 
 // Uncomment to use the nearest multiple of five when fitting glyphs into the
 // texture packer. If commented, it uses the nearest power of two. In most cases
