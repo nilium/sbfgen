@@ -23,10 +23,10 @@ STMT_CREATE_GLYPH_TABLE = "CREATE TABLE IF NOT EXISTS font_glyphs(
   font_id INTEGER,
   code INTEGER,
   page INTEGER,
-  frame_x INTEGER,
-  frame_y INTEGER,
-  frame_width INTEGER,
-  frame_height INTEGER,
+  frame_x REAL,
+  frame_y REAL,
+  frame_width REAL,
+  frame_height REAL,
   advance_x REAL,
   advance_y REAL,
   offset_x REAL,
@@ -147,20 +147,21 @@ def convert_to_db(json_filepath, db = nil)
 
   font_id = nil
 
+  db.execute("BEGIN TRANSACTION")
   db.execute(STMT_INSERT_INFO,
     "pages"        => json_input[KNUM_PAGES],
     "num_glyphs"   => glyphs.length,
     "num_kernings" => kerns.length,
-    "line_height"  => json_input[KLINE_HEIGHT],
-    "leading"      => json_input[KLEADING],
-    "ascent"       => json_input[KASCENT],
-    "descent"      => json_input[KDESCENT],
-    "page_width"   => json_input[KPAGE_SIZE][KWIDTH],
-    "page_height"  => json_input[KPAGE_SIZE][KHEIGHT],
-    "bbox_min_x"   => json_input[KBBOX][KX_MIN],
-    "bbox_max_x"   => json_input[KBBOX][KX_MAX],
-    "bbox_min_y"   => json_input[KBBOX][KY_MIN],
-    "bbox_max_y"   => json_input[KBBOX][KY_MAX],
+    "line_height"  => json_input[KLINE_HEIGHT].to_f,
+    "leading"      => json_input[KLEADING].to_f,
+    "ascent"       => json_input[KASCENT].to_f,
+    "descent"      => json_input[KDESCENT].to_f,
+    "page_width"   => json_input[KPAGE_SIZE][KWIDTH].to_i,
+    "page_height"  => json_input[KPAGE_SIZE][KHEIGHT].to_i,
+    "bbox_min_x"   => json_input[KBBOX][KX_MIN].to_f,
+    "bbox_max_x"   => json_input[KBBOX][KX_MAX].to_f,
+    "bbox_min_y"   => json_input[KBBOX][KY_MIN].to_f,
+    "bbox_max_y"   => json_input[KBBOX][KY_MAX].to_f,
     "name"         => name)
 
   font_id = db.last_insert_row_id()
@@ -173,16 +174,16 @@ def convert_to_db(json_filepath, db = nil)
       |glyph|
 
       r = new_glyph_stmt.execute(
-        "code"         => glyph[KCODE],
-        "page"         => glyph[KPAGE],
-        "frame_x"      => glyph[KFRAME][KX],
-        "frame_y"      => glyph[KFRAME][KY],
-        "frame_width"  => glyph[KFRAME][KWIDTH],
-        "frame_height" => glyph[KFRAME][KHEIGHT],
-        "advance_x"    => glyph[KADVANCES][KX],
-        "advance_y"    => glyph[KADVANCES][KY],
-        "offset_x"     => glyph[KOFFSETS][KX],
-        "offset_y"     => glyph[KOFFSETS][KY]
+        "code"         => glyph[KCODE].to_i,
+        "page"         => glyph[KPAGE].to_i,
+        "frame_x"      => glyph[KFRAME][KX].to_f,
+        "frame_y"      => glyph[KFRAME][KY].to_f,
+        "frame_width"  => glyph[KFRAME][KWIDTH].to_f,
+        "frame_height" => glyph[KFRAME][KHEIGHT].to_f,
+        "advance_x"    => glyph[KADVANCES][KX].to_f,
+        "advance_y"    => glyph[KADVANCES][KY].to_f,
+        "offset_x"     => glyph[KOFFSETS][KX].to_f,
+        "offset_y"     => glyph[KOFFSETS][KY].to_f
         )
     }
     r.close() unless r.nil?
@@ -195,13 +196,14 @@ def convert_to_db(json_filepath, db = nil)
     kerns.each {
       |kern|
       r = new_kern_stmt.execute(
-        "first_code"  => kern[KFIRST],
-        "second_code" => kern[KSECOND],
-        "amount"      => kern[KAMOUNT]
+        "first_code"  => kern[KFIRST].to_i,
+        "second_code" => kern[KSECOND].to_i,
+        "amount"      => kern[KAMOUNT].to_f
         )
     }
     r.close() unless r.nil?
   end
+  db.execute("END TRANSACTION")
 
   db.close() if close_db
 
