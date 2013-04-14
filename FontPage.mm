@@ -25,7 +25,7 @@ along with sbfgen.  If not, see <http://www.gnu.org/licenses/>.
 using namespace snow;
 
 // The size of a cell in the font page's bins
-#define CELL_SIZE (4)
+#define CELL_SIZE (1)
 
 // The minimum glyph size in pixels.
 #define MIN_GLYPH_SIZE CELL_SIZE
