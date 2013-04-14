@@ -27,7 +27,7 @@ CXXFLAGS+= -ObjC++ -std=c++11 -stdlib=libc++
 
 LDFLAGS+= -framework Cocoa
 LDFLAGS+= -lc++
-LDFLAGS+= $(shell pkg-config --libs snow-common)
+LDFLAGS+= $(shell pkg-config --static --libs snow-common)
 
 SOURCES:=\
   BitmapFont.mm \
