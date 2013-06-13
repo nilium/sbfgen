@@ -242,6 +242,7 @@ static NSComparisonResult (^g_glyph_page_code_comparator)(SGlyphInfo *, SGlyphIn
 
   [out addEntriesFromDictionary: @{
     @"name": _font.fontName,
+    @"padding": @(self.padding),
     @"pages": @([_pages count]),
     @"line_height": @([layman defaultLineHeightForFont:_font]),
     @"leading": @((float)CTFontGetLeading((__bridge CTFontRef)_font)),
